@@ -1,0 +1,16 @@
+.env
+*.sqlite
+*.pyc
+*.mo
+*.prof
+.python_history
+.tox
+.coverage
+.coverage.*
+htmlcov
+*.egg-info
+build
+dist
+.vscode
+.idea
+.directory

@@ -1,0 +1,96 @@
+[tool.poetry]
+name = "scim2-server"
+version = "0.1.0"
+description = ""
+license = "Apache"
+authors = [
+    "Yaal Coop <contact@yaal.coop>",
+    "Christian Friedrich Coors <me@ccoors.de>",
+]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+scim2-models = { path = "../../", develop = true }
+werkzeug = "^3.0.3"
+scim2-filter-parser = "^0.7.0"
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8.2.2"
+pytest-coverage = "^0.0"
+httpx = "^0.27.0"
+time-machine = "^2.14.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+scim2-server = "scim2_server.cli:main"
+
+[tool.coverage.run]
+source = [
+    "scim2_server",
+    "tests",
+]
+omit = [".tox/*", "examples/*", "scim2_server/cli.py"]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "@pytest.mark.skip",
+    "@pytest.mark.xfail",
+    "pragma: no cover",
+    "raise NotImplementedError",
+]
+
+[tool.ruff.lint]
+select = [
+    "E", # pycodestyle
+    "F", # pyflakes
+    "I", # isort
+    "UP", # pyupgrade
+]
+ignore = [
+    "E501", # line-too-long
+    "E722", # bare-except
+]
+
+[tool.ruff.lint.isort]
+force-single-line = true
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.pytest.ini_options]
+addopts = "--doctest-modules --doctest-glob='*.rst'"
+doctest_optionflags= "ALLOW_UNICODE IGNORE_EXCEPTION_DETAIL ELLIPSIS"
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+isolated_build = true
+skipsdist = true
+envlist =
+    style
+    py311
+    py312
+    coverage
+
+[testenv]
+allowlist_externals = poetry
+commands =
+    poetry install
+    poetry run pytest --showlocals --full-trace {posargs}
+
+[testenv:style]
+commands =
+    pip install pre-commit
+    pre-commit run --all-files
+
+[testenv:coverage]
+commands =
+    poetry install
+    poetry run pytest --cov --cov-fail-under=100 --cov-report term:skip-covered {posargs}
+    poetry run coverage html
+"""
