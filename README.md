@@ -49,4 +49,7 @@ This provider can be used as a starting point if you want to implement a SCIM pr
 - Support the `/Me` endpoint, if it applies in your use case
 - Add support for using either a static URL prefix or improve the support for usage behind a reverse proxy
 
-The provider in its current state has been tested successfully against a live Microsoft Entra system.
+The provider in its current state has been tested successfully against a live
+[Microsoft Entra](https://learn.microsoft.com/en-us/entra/identity/app-provisioning/scim-validator-tutorial)
+system as well as a live
+[Okta](https://developer.okta.com/docs/guides/scim-provisioning-integration-test/main/) system.

@@ -1,4 +1,3 @@
-import copy
 import json
 import logging
 import traceback
@@ -435,7 +434,7 @@ class SCIMProvider:
         if "filter" in request.args:
             raise Forbidden
 
-    def call_service_provider_config(self, request, **kwargs):
+    def call_service_provider_config(self, request: Request, **kwargs):
         """Returns the ServiceProviderConfig."""
         self.forbid_filter(request)
         auth_scheme = (
@@ -467,25 +466,25 @@ class SCIMProvider:
             ).model_dump()
         )
 
-    def call_resource_type(self, request, resource_type: str, **kwargs):
+    def call_resource_type(self, request: Request, resource_type: str, **kwargs):
         """Returns a single resource type."""
         self.forbid_filter(request)
         if res := self.backend.get_resource_type(resource_type):
-            cp = copy.copy(res)
+            cp = res.model_copy(deep=True)
             cp.meta.location = request.url
             return self.make_response(cp.model_dump())
         raise NotFound
 
-    def call_schema(self, request, schema_id: str):
+    def call_schema(self, request: Request, schema_id: str):
         """Returns a single schema."""
         self.forbid_filter(request)
         if res := self.backend.get_schema(schema_id):
-            cp = copy.copy(res)
+            cp = res.model_copy(deep=True)
             cp.meta.location = request.url
             return self.make_response(cp.model_dump())
         raise NotFound
 
-    def call_resource_types(self, request, **kwargs):
+    def call_resource_types(self, request: Request, **kwargs):
         """Returns a ListResponse of all known resource types."""
         self.forbid_filter(request)
         results = self.backend.get_resource_types()
@@ -497,7 +496,7 @@ class SCIMProvider:
         ).model_dump()
         return self.make_response(resp)
 
-    def call_schemas(self, request, **kwargs):
+    def call_schemas(self, request: Request, **kwargs):
         """Returns a ListResponse of all known schemas."""
         self.forbid_filter(request)
         results = self.backend.get_schemas()
@@ -509,7 +508,7 @@ class SCIMProvider:
         ).model_dump()
         return self.make_response(resp)
 
-    def wsgi_app(self, request, environ):
+    def wsgi_app(self, request: Request, environ):
         try:
             if environ.get("PATH_INFO", "").endswith(".scim"):
                 # RFC 7644, Section 3.8
