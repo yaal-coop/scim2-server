@@ -18,14 +18,6 @@ The only optional feature currently missing is support for Bulk operations ([RFC
 
 ## Usage
 
-This repository functions as a submodule of the parent [scim2-models](https://github.com/yaal-coop/scim2-models). To use it in stand-alone
-mode, apply this diff to `pyproject.toml`:
-
-```diff
--scim2-models = { path = "../../", develop = true }
-+scim2-models = { git = "https://github.com/yaal-coop/scim2-models" }
-```
-
 ```shell
 $ scim2-server [-h] [--schema SCHEMA] [--resource-type RESOURCE_TYPE] [--bearer-token BEARER_TOKEN] [--hostname HOSTNAME] [--port PORT] [--reverse-proxy] [--dump-resources DUMP_RESOURCES]
 ```

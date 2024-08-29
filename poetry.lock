@@ -571,16 +571,14 @@ name = "scim2-models"
 version = "0.2.0"
 description = "SCIM2 models serialization and validation with pydantic"
 optional = false
-python-versions = "^3.9"
-files = []
-develop = true
+python-versions = "<4.0,>=3.9"
+files = [
+    {file = "scim2_models-0.2.0-py3-none-any.whl", hash = "sha256:cdce2b3ea54f9ba0aca0552718484f9d2085901f020cc539705723492381a18d"},
+    {file = "scim2_models-0.2.0.tar.gz", hash = "sha256:e7cae07e51622261f013b63add92b80d3d01fc4eb8059a44fd9e9a45438d8379"},
+]
 
 [package.dependencies]
-pydantic = {version = "^2.7.0", extras = ["email"]}
-
-[package.source]
-type = "directory"
-url = "../.."
+pydantic = {version = ">=2.7.0,<3.0.0", extras = ["email"]}
 
 [[package]]
 name = "six"
@@ -725,4 +723,4 @@ watchdog = ["watchdog (>=2.3)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "fe5e04ff8c6f9ad6d2fecb6a36292c25ba37ef7190dfbda1c152b4adfd102257"
+content-hash = "ae019385f340155807b66afe12ccb8faa5dba26b9e68da1f02890ff50642a709"
