@@ -1,13 +1,25 @@
 [tool.poetry]
 name = "scim2-server"
 version = "0.1.0"
-description = ""
+description = "Lightweight SCIM2 server prototype"
 license = "Apache"
 authors = [
     "Yaal Coop <contact@yaal.coop>",
     "Christian Friedrich Coors <me@ccoors.de>",
 ]
 readme = "README.md"
+keywords = ["scim", "scim2", "provisioning"]
+classifiers = [
+    "Intended Audience :: Developers",
+    "Development Status :: 3 - Beta",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "License :: OSI Approved :: MIT License",
+    "Environment :: Web Environment",
+    "Programming Language :: Python",
+    "Operating System :: OS Independent",
+]
 
 [tool.poetry.dependencies]
 python = "^3.11"
