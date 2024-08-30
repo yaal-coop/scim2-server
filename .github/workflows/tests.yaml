@@ -28,10 +28,6 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
           cache: 'poetry'
-      - name: Use scim2-models from repository
-        run: |
-          sed -i 's|scim2-models = { path = "../../", develop = true }|scim2-models = { git = "https://github.com/yaal-coop/scim2-models" }|g' pyproject.toml
-          poetry lock --no-update
       - name: Install dependencies and run tests
         run: |
           poetry --version
