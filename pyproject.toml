@@ -11,7 +11,7 @@ readme = "README.md"
 keywords = ["scim", "scim2", "provisioning"]
 classifiers = [
     "Intended Audience :: Developers",
-    "Development Status :: 3 - Beta",
+    "Development Status :: 4 - Beta",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: Implementation :: CPython",
