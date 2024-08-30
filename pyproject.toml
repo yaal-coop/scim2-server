@@ -9,6 +9,7 @@ authors = [
 ]
 readme = "README.md"
 keywords = ["scim", "scim2", "provisioning"]
+repository = "https://github.com/yaal-coop/scim2-server"
 classifiers = [
     "Intended Audience :: Developers",
     "Development Status :: 4 - Beta",
