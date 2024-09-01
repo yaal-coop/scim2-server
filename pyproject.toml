@@ -8,7 +8,7 @@ authors = [
     "Christian Friedrich Coors <me@ccoors.de>",
 ]
 readme = "README.md"
-keywords = ["scim", "scim2", "provisioning"]
+keywords = ["scim", "scim2", "provisioning", "rfc7643", "rfc7644"]
 repository = "https://github.com/yaal-coop/scim2-server"
 classifiers = [
     "Intended Audience :: Developers",
@@ -21,6 +21,9 @@ classifiers = [
     "Programming Language :: Python",
     "Operating System :: OS Independent",
 ]
+
+[tool.poetry.urls]
+funding = "https://github.com/sponsors/yaal-coop"
 
 [tool.poetry.dependencies]
 python = "^3.11"
