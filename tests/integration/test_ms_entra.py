@@ -888,7 +888,7 @@ class TestSCIMProviderMSEntraIntegration:
             f"/v2/Users/{id1}",
             json={
                 "id": id1,
-                "userame": "OMalley",
+                "username": "OMalley",
                 "active": False,
                 "addresses": [
                     {
