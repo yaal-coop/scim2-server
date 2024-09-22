@@ -338,7 +338,7 @@ class InMemoryBackend(Backend):
         resource.id = uuid.uuid4().hex
         utcnow = datetime.datetime.now(datetime.UTC)
         resource.meta = Meta(
-            resource_type=resource_type_id,
+            resource_type=self.resource_types[resource_type_id].name,
             created=utcnow,
             last_modified=utcnow,
             location="/v2"
