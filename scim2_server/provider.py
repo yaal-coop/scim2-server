@@ -161,7 +161,7 @@ class SCIMProvider:
 
     def call_single_resource(
         self, request: Request, resource_endpoint: str, resource_id: str, **kwargs
-    ):
+    ) -> Response:
         find_endpoint = "/" + resource_endpoint
         resource_type = self.backend.get_resource_type_by_endpoint(find_endpoint)
         if not resource_type:
@@ -264,7 +264,7 @@ class SCIMProvider:
             raise BadRequest
         return ret
 
-    def build_search_request(self, request: Request):
+    def build_search_request(self, request: Request) -> SearchRequest:
         """Constructs a SearchRequest object from a werkzeug request.
 
         :param request: werkzeug request
@@ -327,7 +327,9 @@ class SCIMProvider:
             resources=resources,
         )
 
-    def call_resource(self, request: Request, resource_endpoint: str, **kwargs):
+    def call_resource(
+        self, request: Request, resource_endpoint: str, **kwargs
+    ) -> Response:
         resource_type = self.backend.get_resource_type_by_endpoint(
             "/" + resource_endpoint
         )
@@ -359,14 +361,16 @@ class SCIMProvider:
                     headers={"Location": created_resource.meta.location},
                 )
 
-    def call_query_all(self, request: Request, **kwargs):
+    def call_query_all(self, request: Request, **kwargs) -> Response:
         return self.make_response(
             self.query_resource(request, None).model_dump(
                 scim_ctx=Context.RESOURCE_QUERY_RESPONSE,
             )
         )
 
-    def call_resource_search(self, request: Request, resource_endpoint: str, **kwargs):
+    def call_resource_search(
+        self, request: Request, resource_endpoint: str, **kwargs
+    ) -> Response:
         resource_type = self.backend.get_resource_type_by_endpoint(
             "/" + resource_endpoint
         )
@@ -410,7 +414,7 @@ class SCIMProvider:
             raise Unauthorized
 
     @staticmethod
-    def make_response(content, status=200, **kwargs):
+    def make_response(content, status=200, **kwargs) -> Response:
         """Constructs a werkzeug response from any JSON-serializable
         content."""
         etag = None
