@@ -759,7 +759,7 @@ class TestSCIMProviderMSEntraIntegration:
         r = wsgi.post(
             "/v2/Users",
             headers={"Content-Type": "application/json"},
-            content='{\r\n    "acve": tre,\r\n    "adadfdresses": [\r\n        {\r\n            "coudftry": "Beruda",\r\n            "formatted": "9132 Jennifer Way Suite 040\\nSouth Nancy, MI 55645",\r\n            "locality": "West Mercedes",\r\n            "postalCode": "99265",\r\n            "region": "Montana",\r\n            "streetAddress": "4939 Hess Fork",\r\n            "type": "work",\r\n            "primary": false\r\n        },\r\n        {\r\n            "country": null,\r\n            "formatted": "18522 Lisa Unions\\nEast Gregory, CT 52311",\r\n            "locality": null,\r\n          les": [],\r\n    "title": "Site engineer",\r\n    "externalId": "22fbc523-6032-4c5f-939d-5d4850cf3e52",\r\n    "schemas": [\r\n        "urn:ietf:params:scim:schemas:core:2.0:User"\r\n    ]\r\n}',
+            content='{\r\n    "acve": tre,\r\n    "adadfdresses": [\r\n        {\r\n            "coudftry": "Beruda",\r\n            "formatted": "9132 Jennifer Way Suite 040\\nSouth Nancy, MI 55645",\r\n            "locality": "West Mercedes",\r\n            "postalCode": "99265",\r\n            "region": "Montana",\r\n            "streetAddress": "4939 Hess Fork",\r\n            "type": "work",\r\n            "primary": false\r\n        },\r\n        {\r\n            "country": null,\r\n            "formatted": "18522 Lisa Unions\\nEast Gregory, CT 52311",\r\n            "locality": null,\r\n          les": [],\r\n    "title": "Site engineer",\r\n    "externalId": "22fbc523-6032-4c5f-939d-5d4850cf3e52",\r\n    "schemas": [\r\n        "urn:ietf:params:scim:schemas:core:2.0:User"\r\n    ]\r\n}',  # codespell:ignore tre
         )
         assert r.status_code == 400
 
@@ -888,7 +888,7 @@ class TestSCIMProviderMSEntraIntegration:
             f"/v2/Users/{id1}",
             json={
                 "id": id1,
-                "username": "OMalley",
+                "userame": "OMalley",  # codespell:ignore userame
                 "active": False,
                 "addresses": [
                     {
@@ -950,7 +950,7 @@ class TestSCIMProviderMSEntraIntegration:
                 "id": id1,
                 "userName": "OMalley",
                 "active": False,
-                "adreses": [
+                "adreses": [  # codespell:ignore adreses
                     {
                         "country": "Germany",
                         "formatted": "1923 Jennifer Way Suite 040\nSouth Nancy, MI 55645",
