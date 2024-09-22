@@ -125,8 +125,8 @@ class SCIMProvider:
 
         :param request: The werkzeug request object
         :param resource: The resource to modify
-        :param cp: Whether or not to return a modified copy of the
-            resource or to modify the resource in-place.
+        :param cp: Whether to return a modified copy of the resource or
+            to modify the resource in-place.
         """
         location = urljoin(request.url + "/", resource.meta.location)
         if cp:
@@ -200,6 +200,7 @@ class SCIMProvider:
                 ).model_validate(request.json)
                 merge_resources(resource, updated_attributes)
                 updated = self.backend.update_resource(resource_type.id, resource)
+                self.adjust_location(request, updated)
                 return self.make_response(
                     updated.model_dump(
                         scim_ctx=Context.RESOURCE_REPLACEMENT_RESPONSE,
@@ -229,6 +230,7 @@ class SCIMProvider:
                 updated = self.backend.update_resource(resource_type.id, resource)
 
                 if response_args:
+                    self.adjust_location(request, updated)
                     return self.make_response(
                         updated.model_dump(
                             scim_ctx=Context.RESOURCE_REPLACEMENT_RESPONSE,
