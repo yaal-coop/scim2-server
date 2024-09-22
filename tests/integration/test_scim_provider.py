@@ -53,6 +53,30 @@ class TestSCIMProvider:
             "sort": {"supported": True},
         }
 
+    def test_no_version_prefix(self, wsgi):
+        """Test a location without the /v2 version prefix."""
+
+        r = wsgi.get("/ServiceProviderConfig")
+        assert r.status_code == 200
+        assert r.headers["Location"] == "https://scim.example.com/ServiceProviderConfig"
+        assert r.json() == {
+            "authenticationSchemes": [],
+            "bulk": {
+                "supported": False,
+            },
+            "changePassword": {"supported": True},
+            "documentationUri": "https://www.example.com/",
+            "etag": {"supported": True},
+            "filter": {"maxResults": 1000, "supported": True},
+            "meta": {
+                "location": "https://scim.example.com/ServiceProviderConfig",
+                "resourceType": "ServiceProviderConfig",
+            },
+            "patch": {"supported": True},
+            "schemas": ["urn:ietf:params:scim:schemas:core:2.0:ServiceProviderConfig"],
+            "sort": {"supported": True},
+        }
+
     def test_schemas(self, wsgi):
         r = wsgi.get("/v2/Schemas")
         assert r.status_code == 200

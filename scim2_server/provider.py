@@ -1,3 +1,4 @@
+import itertools
 import json
 import logging
 import traceback
@@ -54,62 +55,65 @@ class SCIMProvider:
         self.log = logging.getLogger("SCIMProvider")
 
         # Register the URL mapping. The endpoint refers to the name of the function to be called in this SCIMProvider ("call_" + endpoint).
-        self.url_map = Map(
+        rules = itertools.chain.from_iterable(
             [
                 Rule(
-                    "/v2/ServiceProviderConfig",
+                    f"{prefix}/ServiceProviderConfig",
                     endpoint="service_provider_config",
                     methods=("GET",),
                 ),
                 Rule(
-                    "/v2/ResourceTypes",
+                    f"{prefix}/ResourceTypes",
                     endpoint="resource_types",
                     methods=("GET",),
                 ),
                 Rule(
-                    "/v2/ResourceTypes/<string:resource_type>",
+                    f"{prefix}/ResourceTypes/<string:resource_type>",
                     endpoint="resource_type",
                     methods=("GET",),
                 ),
                 Rule(
-                    "/v2/Schemas",
+                    f"{prefix}/Schemas",
                     endpoint="schemas",
                     methods=("GET",),
                 ),
                 Rule(
-                    "/v2/Schemas/<string:schema_id>",
+                    f"{prefix}/Schemas/<string:schema_id>",
                     endpoint="schema",
                     methods=("GET",),
                 ),
                 Rule(
-                    "/v2/Me",
+                    f"{prefix}/Me",
                     endpoint="me",
                     methods=("GET", "POST", "PUT", "PATCH", "DELETE"),
                 ),
                 Rule(
-                    "/v2/<string:resource_endpoint>",
+                    f"{prefix}/<string:resource_endpoint>",
                     endpoint="resource",
                     methods=("GET", "POST"),
                 ),
                 Rule(
-                    "/v2/<string:resource_endpoint>/.search",
+                    f"{prefix}/<string:resource_endpoint>/.search",
                     endpoint="resource_search",
                     methods=("POST",),
                 ),
                 Rule(
-                    "/v2/<string:resource_endpoint>/<string:resource_id>",
+                    f"{prefix}/<string:resource_endpoint>/<string:resource_id>",
                     endpoint="single_resource",
                     methods=("GET", "PUT", "PATCH", "DELETE"),
                 ),
                 Rule(
-                    "/v2/Bulk",
+                    f"{prefix}/Bulk",
                     endpoint="bulk",
                     methods=("POST",),
                 ),
-                Rule("/v2/", endpoint="query_all", methods=("GET",)),
-                Rule("/v2/.search", endpoint="query_all", methods=("POST",)),
+                Rule(f"{prefix}/", endpoint="query_all", methods=("GET",)),
+                Rule(f"{prefix}/.search", endpoint="query_all", methods=("POST",)),
             ]
+            for prefix in ("", "/v2")
         )
+
+        self.url_map = Map(rules)
 
     @staticmethod
     def adjust_location(
