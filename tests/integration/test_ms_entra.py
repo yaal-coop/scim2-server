@@ -6,7 +6,8 @@ import pytest
 class TestSCIMProviderMSEntraIntegration:
     """
     Tests based on Postman tests from
-    https://learn.microsoft.com/en-us/entra/identity/app-provisioning/scim-validator-tutorial#use-postman-to-test-endpoints-optional
+    https://github.com/AzureAD/SCIMReferenceCode/wiki/Test-Your-SCIM-Endpoint
+    https://aka.ms/ProvisioningPostman
     """
 
     def test_endpoints(self, wsgi):
