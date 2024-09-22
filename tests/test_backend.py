@@ -83,6 +83,13 @@ class TestBackend:
         assert desc_1.get_attribute(res) == "ABC"
         assert desc_2.get_attribute(res) == "DEF"
 
+    def test_meta_resource_type_name(self, provider):
+        backend = provider.backend
+        backend.resource_types["User"].name = "User RT Name"
+        resource = backend.get_model("User")(user_name="bjensen")
+        created = backend.create_resource("User", resource)
+        assert created.meta.resource_type == "User RT Name"
+
     def test_register_resource_type_unknown_schema(self):
         backend = InMemoryBackend()
         rt = ResourceType(schema="urn:unknown:Foo")
