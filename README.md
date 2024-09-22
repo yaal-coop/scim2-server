@@ -45,3 +45,7 @@ The provider in its current state has been tested successfully against a live
 [Microsoft Entra](https://learn.microsoft.com/en-us/entra/identity/app-provisioning/scim-validator-tutorial)
 system as well as a live
 [Okta](https://developer.okta.com/docs/guides/scim-provisioning-integration-test/main/) system.
+
+## Origins
+
+Parts of this software were initially developed at [CONTACT Software](https://www.contact-software.com/) ([GitHub](https://github.com/cslab)) and subsequently made available under the Apache License Version 2.0.
