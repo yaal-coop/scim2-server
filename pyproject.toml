@@ -1,15 +1,18 @@
-[tool.poetry]
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
 name = "scim2-server"
 version = "0.1.1"
 description = "Lightweight SCIM2 server prototype"
-license = "Apache"
 authors = [
-    "Yaal Coop <contact@yaal.coop>",
-    "Christian Friedrich Coors <me@ccoors.de>",
+    {name="Yaal Coop", email="contact@yaal.coop"},
+    {name="Christian Friedrich Coors", email="me@ccoors.de"},
 ]
+license = {file = "LICENSE"}
 readme = "README.md"
 keywords = ["scim", "scim2", "provisioning", "rfc7643", "rfc7644"]
-repository = "https://github.com/yaal-coop/scim2-server"
 classifiers = [
     "Intended Audience :: Developers",
     "Development Status :: 4 - Beta",
@@ -17,33 +20,35 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: Implementation :: CPython",
-    "License :: OSI Approved :: MIT License",
+    "License :: OSI Approved :: Apache Software License",
     "Environment :: Web Environment",
     "Programming Language :: Python",
     "Operating System :: OS Independent",
 ]
 
-[tool.poetry.urls]
+requires-python = ">= 3.11"
+dependencies = [
+    "scim2-models>=0.2.0",
+    "werkzeug>=3.0.3",
+    "scim2-filter-parser>=0.7.0",
+]
+
+[project.urls]
+repository = "https://github.com/yaal-coop/scim2-server"
 funding = "https://github.com/sponsors/yaal-coop"
 
-[tool.poetry.dependencies]
-python = "^3.11"
-scim2-models = "^0.2.0"
-werkzeug = "^3.0.3"
-scim2-filter-parser = "^0.7.0"
-
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.2.2"
-pytest-coverage = "^0.0"
-httpx = "^0.27.0"
-time-machine = "^2.14.2"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
-
-[tool.poetry.scripts]
+[project.scripts]
 scim2-server = "scim2_server.cli:main"
+
+[tool.uv]
+dev-dependencies = [
+# development
+    "pytest>=8.2.2",
+    "pytest-coverage>=0.0",
+    "httpx>=0.27.0",
+    "time-machine>=2.14.2",
+    "tox-uv>=1.15.0",
+]
 
 [tool.coverage.run]
 source = [
@@ -59,6 +64,7 @@ exclude_lines = [
     "@pytest.mark.xfail",
     "pragma: no cover",
     "raise NotImplementedError",
+    "\\.\\.\\.\\s*$", # ignore ellipsis
 ]
 
 [tool.ruff.lint]
@@ -84,31 +90,28 @@ addopts = "--doctest-modules --doctest-glob='*.rst'"
 doctest_optionflags= "ALLOW_UNICODE IGNORE_EXCEPTION_DETAIL ELLIPSIS"
 
 [tool.tox]
-legacy_tox_ini = """
-[tox]
-isolated_build = true
-skipsdist = true
-envlist =
-    style
-    py311
-    py312
-    py313
-    coverage
+requires = ["tox>=4.19"]
+env_list = [
+    "style",
+    "py311",
+    "py312",
+    "py313",
+    "coverage",
+]
 
-[testenv]
-allowlist_externals = poetry
-commands =
-    poetry install
-    poetry run pytest --showlocals --full-trace {posargs}
+[tool.tox.env_run_base]
+commands = [
+    ["pytest", "--showlocals", "--full-trace", "{posargs}"],
+]
 
-[testenv:style]
-commands =
-    pip install pre-commit
-    pre-commit run --all-files
+[tool.tox.env.style]
+deps = "pre-commit-uv"
+commands = [
+    ["pre-commit", "run", "--all-files", "--show-diff-on-failure"],
+]
 
-[testenv:coverage]
-commands =
-    poetry install
-    poetry run pytest --cov --cov-fail-under=100 --cov-report term:skip-covered {posargs}
-    poetry run coverage html
-"""
+[tool.tox.env.coverage]
+commands = [
+    ["pytest", "--cov", "--cov-fail-under=100", "--cov-report", "term:skip-covered", "{posargs}"],
+    ["coverage", "html"],
+]

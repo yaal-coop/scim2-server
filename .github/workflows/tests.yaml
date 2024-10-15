@@ -12,7 +12,7 @@ on:
 
 jobs:
   tests:
-    name: ${{ matrix.python }}
+    name: py${{ matrix.python }} unit tests
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -23,17 +23,28 @@ jobs:
           - '3.11'
     steps:
       - uses: actions/checkout@v4
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
-      - uses: actions/setup-python@v5
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
         with:
-          python-version: ${{ matrix.python }}
-          cache: 'poetry'
-      - name: Install dependencies and run tests
-        run: |
-          poetry --version
-          poetry install
-          poetry run pytest --showlocals --cov --cov-fail-under=100 --cov-report term:skip-covered
+          enable-cache: true
+      - name: Install Python ${{ matrix.python }}
+        run: uv python install ${{ matrix.python }}
+      - name: Run tests
+        run: uv run pytest --showlocals
+
+  minversions:
+    name: minimum dependency versions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+      - name: Install minimum dependencies
+        run: uv sync --resolution=lowest-direct
+      - name: Run tests
+        run: uv run pytest --showlocals
 
   style:
     runs-on: ubuntu-latest
