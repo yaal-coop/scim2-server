@@ -443,14 +443,14 @@ wheels = [
 
 [[package]]
 name = "scim2-models"
-version = "0.2.2"
+version = "0.2.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pydantic", extra = ["email"] },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/73/f8/876cf59f922a203a44f278d3fb3f97fc7d113e74a596bd7c659ee55cc916/scim2_models-0.2.2.tar.gz", hash = "sha256:f44d55c310c6db4062cf90ef6242e90f71121370a16f6846bc41bf7deb2fd88a", size = 28367 }
+sdist = { url = "https://files.pythonhosted.org/packages/50/32/2024baa5d4d49985eeafaee8eb0c8c1358ec222ab094d4e86ace71427de9/scim2_models-0.2.3.tar.gz", hash = "sha256:27a5093ab9ee0ceefc66c735cdab10ca16e826da72c24876a003b174d9558fe3", size = 121891 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/52/ea/0781b31aca4fb2954dcb37b513285e04929ca6d7bb8a5d994e31b4dc4307/scim2_models-0.2.2-py3-none-any.whl", hash = "sha256:dbc7668126102a122da5f70500de7931fe28f7cf37762820e86063e3b2d7bbc2", size = 35109 },
+    { url = "https://files.pythonhosted.org/packages/7b/2c/4a5ecc437110f90d0bf4a0f5190ce28fc65df142645878f44005568a4246/scim2_models-0.2.3-py3-none-any.whl", hash = "sha256:ac07107258a11105b9c1185ec2f5b4c8bd89552b8ad157aaca1a8d9c9046bf20", size = 38551 },
 ]
 
 [[package]]
@@ -475,7 +475,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "scim2-filter-parser", specifier = ">=0.7.0" },
-    { name = "scim2-models", specifier = ">=0.2.0" },
+    { name = "scim2-models", specifier = ">=0.2.3" },
     { name = "werkzeug", specifier = ">=3.0.3" },
 ]
 
@@ -652,12 +652,12 @@ wheels = [
 
 [[package]]
 name = "werkzeug"
-version = "3.1.0"
+version = "3.1.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "markupsafe" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/d4/09/a3137f4decac87db077c9edd03a23f85462db89d898caa10223dad4d9af2/werkzeug-3.1.0.tar.gz", hash = "sha256:6f2a0d38f25ba5a75c36c45b4ae350c7a23b57e3b974e9eb2d6851f2c648c00d", size = 806386 }
+sdist = { url = "https://files.pythonhosted.org/packages/32/af/d4502dc713b4ccea7175d764718d5183caf8d0867a4f0190d5d4a45cea49/werkzeug-3.1.1.tar.gz", hash = "sha256:8cd39dfbdfc1e051965f156163e2974e52c210f130810e9ad36858f0fd3edad4", size = 806453 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/2a/f5/4bda0c186b4503ab7df3eaf64c80bab2a230232e140bd83604d103244c39/werkzeug-3.1.0-py3-none-any.whl", hash = "sha256:208a2e31a4a54c8b3d2244f2079ca1d3851629a7a7d546646059c64fb746023a", size = 224367 },
+    { url = "https://files.pythonhosted.org/packages/ee/ea/c67e1dee1ba208ed22c06d1d547ae5e293374bfc43e0eb0ef5e262b68561/werkzeug-3.1.1-py3-none-any.whl", hash = "sha256:a71124d1ef06008baafa3d266c02f56e1836a5984afd6dd6c9230669d60d9fb5", size = 224371 },
 ]

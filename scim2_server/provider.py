@@ -298,9 +298,6 @@ class SCIMProvider:
 
     def query_resource(self, request: Request, resource: Optional[ResourceType]):
         search_request = self.build_search_request(request)
-        if search_request.attributes and search_request.excluded_attributes:
-            # RFC 7644, Section 3.4.2.5
-            raise BadRequest
 
         kwargs = {}
         if resource is not None:
