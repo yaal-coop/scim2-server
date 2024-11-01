@@ -19,7 +19,7 @@ def evaluate_filter(
 
     It works well enough for simple cases, though. It should be re-
     implemented in the future. Probably once
-    https://github.com/yaal-coop/scim2-models/issues/17
+    https://github.com/python-scim/scim2-models/issues/17
     is implemented.
     """
     from scim2_server.operators import ResolveOperator

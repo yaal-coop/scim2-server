@@ -271,7 +271,7 @@ class TestOperators:
         u = User()
         AddOperator("x509Certificates", {"value": base64.b64encode(b"1234567")})(u)
         assert u.x509_certificates == [
-            # https://github.com/yaal-coop/scim2-models/issues/31
+            # https://github.com/python-scim/scim2-models/issues/31
             # Should be value=b"1234567"
             X509Certificate(value=b"MTIzNDU2Nw==")
         ]

@@ -34,8 +34,8 @@ dependencies = [
 ]
 
 [project.urls]
-repository = "https://github.com/yaal-coop/scim2-server"
-funding = "https://github.com/sponsors/yaal-coop"
+repository = "https://github.com/python-scim/scim2-server"
+funding = "https://github.com/sponsors/python-scim"
 
 [project.scripts]
 scim2-server = "scim2_server.cli:main"
