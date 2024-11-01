@@ -1,9 +1,7 @@
-from typing import Dict
-from typing import Iterable
-from typing import Optional
+from collections.abc import Iterable
 
 
-def compare_dicts(a: Dict, b: Dict, ignore_keys: Optional[Iterable] = None):
+def compare_dicts(a: dict, b: dict, ignore_keys: Iterable | None = None):
     """Asserts that the dictionary a is a subset of b."""
     if ignore_keys is None:
         ignore_keys = set()

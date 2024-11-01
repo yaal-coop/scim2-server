@@ -4,10 +4,6 @@ import operator
 import pickle
 import uuid
 from threading import Lock
-from typing import Dict
-from typing import List
-from typing import Optional
-from typing import Tuple
 from typing import Union
 
 from scim2_filter_parser import lexer
@@ -35,10 +31,10 @@ class Backend:
     """The base class for a SCIM provider backend."""
 
     def __init__(self):
-        self.schemas: Dict[str, Schema] = {}
-        self.resource_types: Dict[str, ResourceType] = {}
-        self.resource_types_by_endpoint: Dict[str, ResourceType] = {}
-        self.models_dict: Dict[str, BaseModel] = {}
+        self.schemas: dict[str, Schema] = {}
+        self.resource_types: dict[str, ResourceType] = {}
+        self.resource_types_by_endpoint: dict[str, ResourceType] = {}
+        self.models_dict: dict[str, BaseModel] = {}
 
     def __enter__(self):
         """Allows the backend to be used as a context manager.
@@ -59,7 +55,7 @@ class Backend:
         """Returns all schemas registered with the backend."""
         return self.schemas.values()
 
-    def get_schema(self, schema_id: str) -> Optional[Schema]:
+    def get_schema(self, schema_id: str) -> Schema | None:
         """Gets a schema by its id."""
         return self.schemas.get(schema_id)
 
@@ -93,15 +89,15 @@ class Backend:
         """Returns all resource types registered with the backend."""
         return self.resource_types.values()
 
-    def get_resource_type(self, resource_type_id: str) -> Optional[ResourceType]:
+    def get_resource_type(self, resource_type_id: str) -> ResourceType | None:
         """Returns the resource type by its id."""
         return self.resource_types.get(resource_type_id)
 
-    def get_resource_type_by_endpoint(self, endpoint: str) -> Optional[ResourceType]:
+    def get_resource_type_by_endpoint(self, endpoint: str) -> ResourceType | None:
         """Returns the resource type by its endpoint."""
         return self.resource_types_by_endpoint.get(endpoint.lower())
 
-    def get_model(self, resource_type_id: str) -> Optional[BaseModel]:
+    def get_model(self, resource_type_id: str) -> BaseModel | None:
         """Returns the Pydantic Python model for a given resource type."""
         return self.models_dict.get(resource_type_id)
 
@@ -112,8 +108,8 @@ class Backend:
     def query_resources(
         self,
         search_request: SearchRequest,
-        resource_type_id: Optional[str] = None,
-    ) -> Tuple[int, List[Resource]]:
+        resource_type_id: str | None = None,
+    ) -> tuple[int, list[Resource]]:
         """Queries the backend for a set of resources.
 
         :param search_request: SearchRequest instance describing the
@@ -131,7 +127,7 @@ class Backend:
         """
         raise NotImplementedError
 
-    def get_resource(self, resource_type_id: str, object_id: str) -> Optional[Resource]:
+    def get_resource(self, resource_type_id: str, object_id: str) -> Resource | None:
         """Queries the backend for a resources by its ID.
 
         :param resource_type_id: ID of the resource type to get the
@@ -155,7 +151,7 @@ class Backend:
 
     def create_resource(
         self, resource_type_id: str, resource: Resource
-    ) -> Optional[Resource]:
+    ) -> Resource | None:
         """Creates a resource.
 
         :param resource_type_id: ID of the resource type to create.
@@ -168,7 +164,7 @@ class Backend:
 
     def update_resource(
         self, resource_type_id: str, resource: Resource
-    ) -> Optional[Resource]:
+    ) -> Resource | None:
         """Updates a resource. The resource is identified by its ID.
 
         :param resource_type_id: ID of the resource type to update.
@@ -193,7 +189,7 @@ class InMemoryBackend(Backend):
     class UniquenessDescriptor:
         """Used to mimic uniqueness constraints e.g. from a SQL database."""
 
-        schema: Optional[str]
+        schema: str | None
         attribute_name: str
         case_exact: bool
 
@@ -207,8 +203,8 @@ class InMemoryBackend(Backend):
 
     @classmethod
     def collect_unique_attrs(
-        cls, attributes: List[Attribute], schema: Optional[str]
-    ) -> List[UniquenessDescriptor]:
+        cls, attributes: list[Attribute], schema: str | None
+    ) -> list[UniquenessDescriptor]:
         ret = []
         for attr in attributes:
             if attr.uniqueness != Uniqueness.none:
@@ -221,8 +217,8 @@ class InMemoryBackend(Backend):
 
     @classmethod
     def collect_resource_unique_attrs(
-        cls, resource_type: ResourceType, schemas: Dict[str, Schema]
-    ) -> List[List[UniquenessDescriptor]]:
+        cls, resource_type: ResourceType, schemas: dict[str, Schema]
+    ) -> list[list[UniquenessDescriptor]]:
         ret = cls.collect_unique_attrs(schemas[resource_type.schema_].attributes, None)
         for extension in resource_type.schema_extensions or []:
             ret.extend(
@@ -234,8 +230,8 @@ class InMemoryBackend(Backend):
 
     def __init__(self):
         super().__init__()
-        self.resources: List[Resource] = []
-        self.unique_attributes: Dict[str, List[List[str]]] = {}
+        self.resources: list[Resource] = []
+        self.unique_attributes: dict[str, list[list[str]]] = {}
         self.lock: Lock = Lock()
 
     def __enter__(self):
@@ -261,8 +257,8 @@ class InMemoryBackend(Backend):
     def query_resources(
         self,
         search_request: SearchRequest,
-        resource_type_id: Optional[str] = None,
-    ) -> Tuple[int, List[Resource]]:
+        resource_type_id: str | None = None,
+    ) -> tuple[int, list[Resource]]:
         start_index = (search_request.start_index or 1) - 1
 
         tree = None
@@ -304,7 +300,7 @@ class InMemoryBackend(Backend):
             found_resources = found_resources[: search_request.count]
         return len(found_resources), found_resources
 
-    def _get_resource_idx(self, resource_type_id: str, object_id: str) -> Optional[int]:
+    def _get_resource_idx(self, resource_type_id: str, object_id: str) -> int | None:
         return next(
             (
                 idx
@@ -314,7 +310,7 @@ class InMemoryBackend(Backend):
             None,
         )
 
-    def get_resource(self, resource_type_id: str, object_id: str) -> Optional[Resource]:
+    def get_resource(self, resource_type_id: str, object_id: str) -> Resource | None:
         resource_dict_idx = self._get_resource_idx(resource_type_id, object_id)
         if resource_dict_idx is not None:
             return self.resources[resource_dict_idx].model_copy(deep=True)
@@ -333,7 +329,7 @@ class InMemoryBackend(Backend):
 
     def create_resource(
         self, resource_type_id: str, resource: Resource
-    ) -> Optional[Resource]:
+    ) -> Resource | None:
         resource = resource.model_copy(deep=True)
         resource.id = uuid.uuid4().hex
         utcnow = datetime.datetime.now(datetime.UTC)
@@ -372,7 +368,7 @@ class InMemoryBackend(Backend):
 
     def update_resource(
         self, resource_type_id: str, resource: Resource
-    ) -> Optional[Resource]:
+    ) -> Resource | None:
         found_res_idx = self._get_resource_idx(resource_type_id, resource.id)
         if found_res_idx is not None:
             updated_resource = self.models_dict[resource_type_id].model_validate(

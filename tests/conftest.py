@@ -1,6 +1,5 @@
 import importlib
 import json
-from typing import List
 
 import httpx
 import pytest
@@ -21,7 +20,7 @@ def static_data():
     return load_default_schemas(), load_default_resource_types()
 
 
-def load_json_resource(json_name: str) -> List:
+def load_json_resource(json_name: str) -> list:
     fp = importlib.resources.files("tests") / json_name
     with open(fp) as f:
         return json.load(f)

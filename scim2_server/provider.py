@@ -2,8 +2,6 @@ import itertools
 import json
 import logging
 import traceback
-from typing import Dict
-from typing import Optional
 from typing import Union
 from urllib.parse import urljoin
 
@@ -118,7 +116,7 @@ class SCIMProvider:
     @staticmethod
     def adjust_location(
         request: Request, resource: Resource, cp=False
-    ) -> Optional[Resource]:
+    ) -> Resource | None:
         """Adjusts the "meta.location" attribute of a resource to match the
         hostname the client used to access this server. If a static URL is
         used,
@@ -246,7 +244,7 @@ class SCIMProvider:
                     )
 
     @staticmethod
-    def get_attrs_from_request(request: Request) -> Dict:
+    def get_attrs_from_request(request: Request) -> dict:
         """Parses the "attributes" an "excludedAttributes" HTTP request
         parameters."""
         ret = {}
@@ -296,7 +294,7 @@ class SCIMProvider:
             search_request.sort_order = SearchRequest.SortOrder.descending
         return search_request
 
-    def query_resource(self, request: Request, resource: Optional[ResourceType]):
+    def query_resource(self, request: Request, resource: ResourceType | None):
         search_request = self.build_search_request(request)
 
         kwargs = {}

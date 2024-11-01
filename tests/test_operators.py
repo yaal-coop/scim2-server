@@ -1,7 +1,5 @@
 import base64
 import datetime
-from typing import List
-from typing import Optional
 
 import pytest
 from scim2_models import BaseModel
@@ -280,14 +278,12 @@ class TestOperators:
 
     def test_add_operator_datetime(self):
         class Foo(Resource):
-            schemas: List[str] = ["urn:example:2.0:Foo"]
-            dt: Optional[datetime.datetime] = None
+            schemas: list[str] = ["urn:example:2.0:Foo"]
+            dt: datetime.datetime | None = None
 
         f = Foo()
         AddOperator("dt", "2010-01-23T04:56:22Z")(f)
-        assert f.dt == datetime.datetime(
-            2010, 1, 23, 4, 56, 22, tzinfo=datetime.timezone.utc
-        )
+        assert f.dt == datetime.datetime(2010, 1, 23, 4, 56, 22, tzinfo=datetime.UTC)
 
     def test_add_operator_extension_simple(self):
         u = User[EnterpriseUser]()

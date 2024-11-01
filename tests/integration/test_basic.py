@@ -1,4 +1,3 @@
-from typing import List
 from typing import Union
 
 from scim2_models import ListResponse
@@ -88,7 +87,7 @@ class TestSCIMProviderBasic:
     def test_sort(self, provider, wsgi):
         TypedListResponse = ListResponse[Union[*provider.backend.get_models()]]
 
-        def assert_sorted(sort_by: str, sorted: List[str], endpoint: str = "/v2/Users"):
+        def assert_sorted(sort_by: str, sorted: list[str], endpoint: str = "/v2/Users"):
             for order_by, inverted in (
                 (None, False),
                 ("ascending", False),

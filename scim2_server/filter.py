@@ -1,5 +1,4 @@
 from types import NoneType
-from typing import List
 
 from scim2_filter_parser import ast as scim2ast
 from scim2_models import BaseModel
@@ -12,8 +11,8 @@ from scim2_server.utils import parse_new_value
 
 
 def evaluate_filter(
-    obj: BaseModel | List[BaseModel], tree: scim2ast.AST
-) -> bool | List[bool]:
+    obj: BaseModel | list[BaseModel], tree: scim2ast.AST
+) -> bool | list[bool]:
     """This implementation is limited by the specifics of the
     scim2_filter_parser module.
 
@@ -29,7 +28,7 @@ def evaluate_filter(
         case scim2ast.Filter:
             if tree.namespace is not None:
                 obj = ResolveOperator(tree.namespace.attr_name)(obj).get_values()
-            if isinstance(obj, List):
+            if isinstance(obj, list):
                 return [
                     o
                     for o in obj
@@ -124,5 +123,5 @@ def check_comparable_value(value):
     "Boolean and Binary attributes SHALL cause a failed response (HTTP
     status code 400) with "scimType" of "invalidFilter"."
     """
-    if isinstance(value, (bytes, bool, NoneType)):
+    if isinstance(value, bytes | bool | NoneType):
         raise SCIMException(Error.make_invalid_filter_error())

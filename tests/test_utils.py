@@ -1,6 +1,4 @@
 from typing import Annotated
-from typing import List
-from typing import Optional
 
 import pytest
 from scim2_filter_parser.lexer import SCIMLexer
@@ -358,8 +356,8 @@ class TestUtils:
 
     def test_merge_resources_immutable(self):
         class Foo(Resource):
-            schemas: List[str] = ["urn:example:2.0:Foo"]
-            immutable_string: Annotated[Optional[str], Mutability.immutable] = None
+            schemas: list[str] = ["urn:example:2.0:Foo"]
+            immutable_string: Annotated[str | None, Mutability.immutable] = None
 
         stored = Foo()
         merge_resources(stored, Foo(immutable_string="ABC"))
@@ -370,9 +368,9 @@ class TestUtils:
 
     def test_is_multi_valued(self):
         class Foo(Resource):
-            schemas: List[str] = ["urn:example:2.0:Foo"]
-            some_string: Optional[str] = None
-            multi_valued_string: Optional[List[str]] = None
+            schemas: list[str] = ["urn:example:2.0:Foo"]
+            some_string: str | None = None
+            multi_valued_string: list[str] | None = None
 
         res = Foo()
         assert is_multi_valued(res, "schemas")
