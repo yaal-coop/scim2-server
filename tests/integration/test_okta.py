@@ -2,8 +2,8 @@ import datetime
 
 
 class TestSCIMProviderOktaIntegration:
-    """
-    Tests based on Runscope Spec Test JSON from
+    """Test based on Runscope Spec Test JSON from Okta docs.
+
     https://developer.okta.com/docs/guides/scim-provisioning-integration-prepare/main/#test-your-scim-api
     """
 

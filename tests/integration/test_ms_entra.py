@@ -4,8 +4,8 @@ import pytest
 
 
 class TestSCIMProviderMSEntraIntegration:
-    """
-    Tests based on Postman tests from
+    """Tests based on Postman tests from Azure docs.
+
     https://github.com/AzureAD/SCIMReferenceCode/wiki/Test-Your-SCIM-Endpoint
     https://aka.ms/ProvisioningPostman
     """

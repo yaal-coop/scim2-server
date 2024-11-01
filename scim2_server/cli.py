@@ -14,7 +14,7 @@ from scim2_server.utils import load_default_schemas
 
 
 def log_environ(handler):
-    """A simple decorator to log all WSGI environment variables."""
+    """Build a simple decorator to log all WSGI environment variables."""
 
     def _inner(environ, start_fn):
         logging.getLogger("log_environ").debug(pprint.pformat(environ))

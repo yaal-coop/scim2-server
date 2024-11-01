@@ -13,8 +13,9 @@ from scim2_server.utils import parse_new_value
 def evaluate_filter(
     obj: BaseModel | list[BaseModel], tree: scim2ast.AST
 ) -> bool | list[bool]:
-    """This implementation is limited by the specifics of the
-    scim2_filter_parser module.
+    """Resolve filters.
+
+    This implementation is limited by the specifics of the scim2_filter_parser module.
 
     It works well enough for simple cases, though. It should be re-
     implemented in the future. Probably once
@@ -117,8 +118,7 @@ def evaluate_filter(
 
 
 def check_comparable_value(value):
-    """Certain values may not be compared in a filter, see RFC 7644, section
-    3.4.2.2:
+    """Certain values may not be compared in a filter, see RFC 7644, section 3.4.2.2.
 
     "Boolean and Binary attributes SHALL cause a failed response (HTTP
     status code 400) with "scimType" of "invalidFilter"."

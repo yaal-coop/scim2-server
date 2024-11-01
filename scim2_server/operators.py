@@ -26,7 +26,7 @@ ATTRIBUTE_PATH_REGEX = re.compile(
 
 
 def patch_resource(resource: Resource, operation: PatchOperation):
-    """Runs a patch operation against a resource."""
+    """Run a patch operation against a resource."""
     match operation.op:
         case PatchOperation.Op.add:
             operator = AddOperator(operation.path, operation.value)
@@ -40,7 +40,7 @@ def patch_resource(resource: Resource, operation: PatchOperation):
 
 
 def parse_attribute_path(attribute_path: str | None) -> dict[str, Any] | None:
-    """Parses an attribute path and returns a dictionary of attributes.
+    """Parse an attribute path and returns a dictionary of attributes.
 
     The attributes are the named captures in the regex
     ATTRIBUTE_PATH_REGEX.
@@ -61,8 +61,7 @@ def parse_attribute_path(attribute_path: str | None) -> dict[str, Any] | None:
 
 
 class Operator:
-    """An operator operates on a resource and is constructed using a path and a
-    value."""
+    """An operator operates on a resource and is constructed using a path and a value."""
 
     OPERATE_ON_ROOT = True  # Whether the operator may operate on the root of a resource (e.g. remove may not)
     REQUIRES_VALUE = True  # Whether the operator modifies the resource or not
@@ -76,22 +75,22 @@ class Operator:
     def init_return(
         cls, model: BaseModel, attribute: str, sub_attribute: str | None, value: Any
     ):
-        """Initializes the return value if the operator returns something."""
+        """Initialize the return value if the operator returns something."""
         pass
 
     def do_return(self):
-        """Returns the return value for the operator."""
+        """Return the return value for the operator."""
         return None
 
     @classmethod
     def operation(
         cls, model: BaseModel, attribute: str, value: Any, index: int | None = None
     ):
-        """Performs the actual operation of the operator."""
+        """Perform the actual operation of the operator."""
         raise NotImplementedError
 
     def parse_path(self, model: BaseModel):
-        """Parses a path and optionally handles model extensions.
+        """Parse a path and optionally handles model extensions.
 
         :return: A tuple of the model to operate on and the parsed path.
         """
@@ -101,7 +100,7 @@ class Operator:
         return model, parse_attribute_path(path)
 
     def __call__(self, model: BaseModel):
-        """Executes the operator against a model."""
+        """Execute the operator against a model."""
         if not self.path:
             self.call_on_root(model)
             return self.do_return()
@@ -302,8 +301,7 @@ class ReplaceOperator(Operator):
 
 
 class ResolveResult:
-    """A descriptor for the result returned from the "ResolveOperator", used to
-    resolve attributes from a model."""
+    """A descriptor for the result returned from the "ResolveOperator", used to resolve attributes from a model."""
 
     def __init__(self):
         self.records = []
@@ -313,11 +311,11 @@ class ResolveResult:
         self.sub_attribute = None
 
     def add_result(self, model: BaseModel, attribute_name: str):
-        """Adds a result to the descriptor."""
+        """Add a result to the descriptor."""
         self.records.append((model, attribute_name))
 
     def add_result_index(self, model: BaseModel, attribute_name: str, index: int):
-        """Adds a result to the descriptor.
+        """Add a result to the descriptor.
 
         The resulting attribute is part of a multi-valued attribute
         described by its index.
@@ -387,13 +385,13 @@ class ResolveOperator(Operator):
 
 
 class ResolveSortOperator(ResolveOperator):
-    """
-    Helper-Operator that implements sorting, according to RFC 7644, Section 3.4.2.3
+    """Implement sorting in a helper Operator, according to RFC 7644, Section 3.4.2.3.
+
     The ResolveResult returned by this operator contains at most 1 value, according to
     the specification:
     "[...] if it's a multi-valued attribute, resources are sorted by the value of the
     primary attribute (see Section 2.4 of [RFC7643]), if any, or else the first value
-    in the list, if any. [...]"
+    in the list, if any. [...]".
 
     Since a Query can result in resources of different types, sorting by an attribute
     that is not defined for a certain resource type does not result in an error. No
@@ -464,7 +462,7 @@ class ResolveSortOperator(ResolveOperator):
         return self.value
 
     def select_candidate(self, values: list[Any]) -> tuple[Any | None, int]:
-        """Selects a viable candidate from a list of possible values."""
+        """Select a viable candidate from a list of possible values."""
         for value in values:
             primary = getattr(value, "primary", False)
             if primary:

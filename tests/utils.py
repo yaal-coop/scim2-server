@@ -2,7 +2,7 @@ from collections.abc import Iterable
 
 
 def compare_dicts(a: dict, b: dict, ignore_keys: Iterable | None = None):
-    """Asserts that the dictionary a is a subset of b."""
+    """Assert that the dictionary a is a subset of b."""
     if ignore_keys is None:
         ignore_keys = set()
     for k, v in a.items():

@@ -19,23 +19,21 @@ from scim2_models import Schema
 
 
 class SCIMException(Exception):
-    """A wrapper class, because an "Error" does not inherit from Exception and
-    should not be raised."""
+    """A wrapper class, because an "Error" does not inherit from Exception and should not be raised."""
 
     def __init__(self, scim_error: Error):
         self.scim_error = scim_error
 
 
 def load_json_resource(json_name: str) -> list:
-    """Loads a JSON document from the scim2_server package resources."""
+    """Load a JSON document from the scim2_server package resources."""
     fp = importlib.resources.files("scim2_server") / "resources" / json_name
     with open(fp) as f:
         return json.load(f)
 
 
 def load_scim_resource(json_name: str, type_: type[Resource]):
-    """Loads and validates a JSON document from the scim2_server package
-    resources."""
+    """Load and validates a JSON document from the scim2_server package resources."""
     ret = {}
     definitions = load_json_resource(json_name)
     for d in definitions:
@@ -45,18 +43,17 @@ def load_scim_resource(json_name: str, type_: type[Resource]):
 
 
 def load_default_schemas() -> dict[str, Schema]:
-    """Loads the default schemas from RFC 7643."""
+    """Load the default schemas from RFC 7643."""
     return load_scim_resource("default-schemas.json", Schema)
 
 
 def load_default_resource_types() -> dict[str, ResourceType]:
-    """Loads the default resource types from RFC 7643."""
+    """Load the default resource types from RFC 7643."""
     return load_scim_resource("default-resource-types.json", ResourceType)
 
 
 def merge_resources(target: Resource, updates: BaseModel):
-    """Merges a resource with another resource as specified for HTTP PUT (RFC
-    7644, section 3.5.1)"""
+    """Merge a resource with another resource as specified for HTTP PUT (RFC 7644, section 3.5.1)."""
     for set_attribute in updates.model_fields_set:
         mutability = target.get_field_annotation(set_attribute, Mutability)
         if mutability == Mutability.read_only:
@@ -77,8 +74,7 @@ def merge_resources(target: Resource, updates: BaseModel):
 
 
 def get_by_alias(r: BaseModel, scim_name: str, allow_none: bool = False) -> str | None:
-    """Returns the pydantic attribute name for a BaseModel and given SCIM
-    attribute name.
+    """Return the pydantic attribute name for a BaseModel and given SCIM attribute name.
 
     :param r: BaseModel
     :param scim_name: SCIM attribute name
@@ -100,7 +96,7 @@ def get_by_alias(r: BaseModel, scim_name: str, allow_none: bool = False) -> str 
 
 
 def is_multi_valued(model: BaseModel, attribute_name: str) -> bool:
-    """Checks whether a given attribute of a model is multi-valued."""
+    """Check whether a given attribute of a model is multi-valued."""
     attribute_type = model.model_fields[attribute_name].annotation
 
     if get_origin(attribute_type) in (Union, UnionType):
@@ -111,7 +107,7 @@ def is_multi_valued(model: BaseModel, attribute_name: str) -> bool:
 
 
 def get_schemas(resource: Resource) -> list[str]:
-    """Returns a list of all schemas possible for a given resource.
+    """Return a list of all schemas possible for a given resource.
 
     Note that this may include schemas the resource does not currently
     have (such as missing optional schema extensions).
@@ -122,7 +118,7 @@ def get_schemas(resource: Resource) -> list[str]:
 def get_or_create(
     model: BaseModel, attribute_name: str, check_mutability: bool = False
 ):
-    """Gets or creates a complex attribute model for a given resource.
+    """Get or creates a complex attribute model for a given resource.
 
     :param model: The model
     :param attribute_name: The attribute name
@@ -170,8 +166,7 @@ def handle_extension(resource: Resource, scim_name: str) -> tuple[BaseModel, str
 
 
 def model_validate_from_dict(field_root_type: BaseModel, value: dict) -> Any:
-    """Workaround for some of the "special" requirements for MS Entra, mixing
-    display and displayName in some cases."""
+    """Workaround for some of the "special" requirements for MS Entra, mixing display and displayName in some cases."""
     if (
         "display" not in value
         and "display" in field_root_type.model_fields
@@ -183,8 +178,7 @@ def model_validate_from_dict(field_root_type: BaseModel, value: dict) -> Any:
 
 
 def parse_new_value(model: BaseModel, attribute_name: str, value: Any) -> Any:
-    """Given a model and attribute name, attempt to parse a new value so that
-    the type matches the type expected by the model.
+    """Given a model and attribute name, attempt to parse a new value so that the type matches the type expected by the model.
 
     :raises SCIMException: If attribute can not be mapped to the
         required type

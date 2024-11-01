@@ -117,9 +117,7 @@ class SCIMProvider:
     def adjust_location(
         request: Request, resource: Resource, cp=False
     ) -> Resource | None:
-        """Adjusts the "meta.location" attribute of a resource to match the
-        hostname the client used to access this server. If a static URL is
-        used,
+        """Adjust the "meta.location" attribute of a resource to match the hostname the client used to access this server. If a static URL is used,.
 
         :param request: The werkzeug request object
         :param resource: The resource to modify
@@ -135,14 +133,13 @@ class SCIMProvider:
         resource.meta.location = location
 
     def apply_patch_operation(self, resource: Resource, patch_operation: PatchOp):
-        """Applies a PATCH operation to a resource."""
+        """Apply a PATCH operation to a resource."""
         for op in patch_operation.operations:
             patch_resource(resource, op)
 
     @staticmethod
     def continue_etag(request: Request, resource: Resource) -> bool:
-        """Given a request and a resource, checks whether the ETag matches and
-        allows continuing with the request.
+        """Given a request and a resource, checks whether the ETag matches and allows continuing with the request.
 
         If the HTTP header "If-Match" is set, the request may only
         continue if the ETag matches. If the HTTP header "If-None-Match"
@@ -245,8 +242,7 @@ class SCIMProvider:
 
     @staticmethod
     def get_attrs_from_request(request: Request) -> dict:
-        """Parses the "attributes" an "excludedAttributes" HTTP request
-        parameters."""
+        """Parse the "attributes" an "excludedAttributes" HTTP request parameters."""
         ret = {}
         if "attributes" in request.args:
             ret["attributes"] = [
@@ -263,7 +259,7 @@ class SCIMProvider:
         return ret
 
     def build_search_request(self, request: Request) -> SearchRequest:
-        """Constructs a SearchRequest object from a werkzeug request.
+        """Construct a SearchRequest object from a werkzeug request.
 
         :param request: werkzeug request
         :return: SearchRequest instance
@@ -378,7 +374,7 @@ class SCIMProvider:
         )
 
     def call_me(self, request: Request, **kwargs):
-        """Called for the /Me-Endpoint.
+        """Implement the /Me endpoint.
 
         RFC 7644, Section 3.11 allows raising a 501 (Not Implemented) if
         the endpoint does not provide this feature.
@@ -392,14 +388,14 @@ class SCIMProvider:
         self.backend.register_resource_type(resource_type)
 
     def register_bearer_token(self, token: str):
-        """Registers a static bearer token for authentication.
+        """Register a static bearer token for authentication.
 
         :param token: Bearer token
         """
         self.bearer_tokens.add(token)
 
     def check_auth(self, request: Request):
-        """Checks the authorization headers."""
+        """Check the authorization headers."""
         if not self.bearer_tokens:
             return
         if (
@@ -410,8 +406,7 @@ class SCIMProvider:
 
     @staticmethod
     def make_response(content, status=200, **kwargs) -> Response:
-        """Constructs a werkzeug response from any JSON-serializable
-        content."""
+        """Construct a werkzeug response from any JSON-serializable content."""
         etag = None
         if content is not None:
             etag = content.get("meta", {}).get("version")
@@ -429,18 +424,17 @@ class SCIMProvider:
         )
 
     def make_error(self, error: Error):
-        """Constructs a werkzeug response from a SCIM Error."""
+        """Construct a werkzeug response from a SCIM Error."""
         return self.make_response(error.model_dump(), status=int(error.status))
 
     @staticmethod
     def forbid_filter(request: Request):
-        """RFC 7644, Section 4: "If a "filter" is provided, the service
-        provider SHOULD respond with HTTP status code 403 (Forbidden)"."""
+        """RFC 7644, Section 4: "If a "filter" is provided, the service provider SHOULD respond with HTTP status code 403 (Forbidden)"."""
         if "filter" in request.args:
             raise Forbidden
 
     def call_service_provider_config(self, request: Request, **kwargs):
-        """Returns the ServiceProviderConfig."""
+        """Return the ServiceProviderConfig."""
         self.forbid_filter(request)
         auth_scheme = (
             []
@@ -472,7 +466,7 @@ class SCIMProvider:
         )
 
     def call_resource_type(self, request: Request, resource_type: str, **kwargs):
-        """Returns a single resource type."""
+        """Return a single resource type."""
         self.forbid_filter(request)
         if res := self.backend.get_resource_type(resource_type):
             cp = res.model_copy(deep=True)
@@ -481,7 +475,7 @@ class SCIMProvider:
         raise NotFound
 
     def call_schema(self, request: Request, schema_id: str):
-        """Returns a single schema."""
+        """Return a single schema."""
         self.forbid_filter(request)
         if res := self.backend.get_schema(schema_id):
             cp = res.model_copy(deep=True)
@@ -490,7 +484,7 @@ class SCIMProvider:
         raise NotFound
 
     def call_resource_types(self, request: Request, **kwargs):
-        """Returns a ListResponse of all known resource types."""
+        """Return a ListResponse of all known resource types."""
         self.forbid_filter(request)
         results = self.backend.get_resource_types()
         resp = ListResponse[ResourceType](
@@ -502,7 +496,7 @@ class SCIMProvider:
         return self.make_response(resp)
 
     def call_schemas(self, request: Request, **kwargs):
-        """Returns a ListResponse of all known schemas."""
+        """Return a ListResponse of all known schemas."""
         self.forbid_filter(request)
         results = self.backend.get_schemas()
         resp = ListResponse[Schema](
@@ -549,7 +543,7 @@ class SCIMProvider:
             return self.make_error(Error(status=500, detail=str(e) + "\n" + tb))
 
     def __call__(self, environ, start_response):
-        """The actual WSGI server implementation."""
+        """Return the actual WSGI server implementation."""
         request = Request(environ)
         response = self.wsgi_app(request, environ)
         if "Location" not in response.headers:

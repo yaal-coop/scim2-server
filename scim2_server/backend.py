@@ -37,30 +37,30 @@ class Backend:
         self.models_dict: dict[str, BaseModel] = {}
 
     def __enter__(self):
-        """Allows the backend to be used as a context manager.
+        """Allow the backend to be used as a context manager.
 
         This enables support for transactions.
         """
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        """Exits the transaction."""
+        """Exit the transaction."""
         pass
 
     def register_schema(self, schema: Schema):
-        """Registers a Schema for use with the backend."""
+        """Register a Schema for use with the backend."""
         self.schemas[schema.id] = schema
 
     def get_schemas(self):
-        """Returns all schemas registered with the backend."""
+        """Return all schemas registered with the backend."""
         return self.schemas.values()
 
     def get_schema(self, schema_id: str) -> Schema | None:
-        """Gets a schema by its id."""
+        """Get a schema by its id."""
         return self.schemas.get(schema_id)
 
     def register_resource_type(self, resource_type: ResourceType):
-        """Registers a ResourceType for use with the backend.
+        """Register a ResourceType for use with the backend.
 
         The schemas used for the resource and its extensions must have
         been registered with the Backend beforehand.
@@ -86,23 +86,23 @@ class Backend:
             ]
 
     def get_resource_types(self):
-        """Returns all resource types registered with the backend."""
+        """Return all resource types registered with the backend."""
         return self.resource_types.values()
 
     def get_resource_type(self, resource_type_id: str) -> ResourceType | None:
-        """Returns the resource type by its id."""
+        """Return the resource type by its id."""
         return self.resource_types.get(resource_type_id)
 
     def get_resource_type_by_endpoint(self, endpoint: str) -> ResourceType | None:
-        """Returns the resource type by its endpoint."""
+        """Return the resource type by its endpoint."""
         return self.resource_types_by_endpoint.get(endpoint.lower())
 
     def get_model(self, resource_type_id: str) -> BaseModel | None:
-        """Returns the Pydantic Python model for a given resource type."""
+        """Return the Pydantic Python model for a given resource type."""
         return self.models_dict.get(resource_type_id)
 
     def get_models(self):
-        """Returns all Pydantic Python models for all known resource types."""
+        """Return all Pydantic Python models for all known resource types."""
         return self.models_dict.values()
 
     def query_resources(
@@ -110,7 +110,7 @@ class Backend:
         search_request: SearchRequest,
         resource_type_id: str | None = None,
     ) -> tuple[int, list[Resource]]:
-        """Queries the backend for a set of resources.
+        """Query the backend for a set of resources.
 
         :param search_request: SearchRequest instance describing the
             query.
@@ -128,7 +128,7 @@ class Backend:
         raise NotImplementedError
 
     def get_resource(self, resource_type_id: str, object_id: str) -> Resource | None:
-        """Queries the backend for a resources by its ID.
+        """Query the backend for a resources by its ID.
 
         :param resource_type_id: ID of the resource type to get the
             object from.
@@ -140,7 +140,7 @@ class Backend:
         raise NotImplementedError
 
     def delete_resource(self, resource_type_id: str, object_id: str) -> bool:
-        """Deletes a resource.
+        """Delete a resource.
 
         :param resource_type_id: ID of the resource type to delete the
             object from.
@@ -152,7 +152,7 @@ class Backend:
     def create_resource(
         self, resource_type_id: str, resource: Resource
     ) -> Resource | None:
-        """Creates a resource.
+        """Create a resource.
 
         :param resource_type_id: ID of the resource type to create.
         :param resource: Resource to create.
@@ -165,7 +165,7 @@ class Backend:
     def update_resource(
         self, resource_type_id: str, resource: Resource
     ) -> Resource | None:
-        """Updates a resource. The resource is identified by its ID.
+        """Update a resource. The resource is identified by its ID.
 
         :param resource_type_id: ID of the resource type to update.
         :param resource: Resource to update.
@@ -177,7 +177,7 @@ class Backend:
 
 
 class InMemoryBackend(Backend):
-    """This is an example in-memory backend for the SCIM provider.
+    """An example in-memory backend for the SCIM provider.
 
     It is not optimized for performance. Many operations are O(n) or
     worse, whereas they would perform better with an actual production

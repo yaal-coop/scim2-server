@@ -55,7 +55,6 @@ class TestSCIMProvider:
 
     def test_no_version_prefix(self, wsgi):
         """Test a location without the /v2 version prefix."""
-
         r = wsgi.get("/ServiceProviderConfig")
         assert r.status_code == 200
         assert r.headers["Location"] == "https://scim.example.com/ServiceProviderConfig"
