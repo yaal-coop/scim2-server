@@ -40,14 +40,13 @@ funding = "https://github.com/sponsors/yaal-coop"
 [project.scripts]
 scim2-server = "scim2_server.cli:main"
 
-[tool.uv]
-dev-dependencies = [
-# development
+[dependency-groups]
+dev = [
     "pytest>=8.2.2",
     "pytest-coverage>=0.0",
     "httpx>=0.27.0",
     "time-machine>=2.14.2",
-    "tox-uv>=1.15.0",
+    "tox-uv>=1.16.0",
 ]
 
 [tool.coverage.run]
@@ -101,6 +100,7 @@ env_list = [
 ]
 
 [tool.tox.env_run_base]
+runner = "uv-venv-lock-runner"
 commands = [
     ["pytest", "--showlocals", "--full-trace", "{posargs}"],
 ]
