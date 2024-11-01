@@ -1,9 +1,5 @@
 import re
-from typing import Dict
-from typing import List
-from typing import Optional
-from typing import Tuple
-from typing import Type
+from typing import Any
 
 from scim2_filter_parser.lexer import SCIMLexer
 from scim2_filter_parser.parser import SCIMParser
@@ -43,7 +39,7 @@ def patch_resource(resource: Resource, operation: PatchOperation):
             operator(resource)
 
 
-def parse_attribute_path(attribute_path: Optional[str]) -> Optional[Dict[str, any]]:
+def parse_attribute_path(attribute_path: str | None) -> dict[str, Any] | None:
     """Parses an attribute path and returns a dictionary of attributes.
 
     The attributes are the named captures in the regex
@@ -72,13 +68,13 @@ class Operator:
     REQUIRES_VALUE = True  # Whether the operator modifies the resource or not
     RETURNS_VALUE = False  # Whether the operator returns a result or not
 
-    def __init__(self, path: Optional[str], value: Optional[any]):
+    def __init__(self, path: str | None, value: Any | None):
         self.path = path
         self.value = value
 
     @classmethod
     def init_return(
-        cls, model: BaseModel, attribute: str, sub_attribute: Optional[str], value: any
+        cls, model: BaseModel, attribute: str, sub_attribute: str | None, value: Any
     ):
         """Initializes the return value if the operator returns something."""
         pass
@@ -89,7 +85,7 @@ class Operator:
 
     @classmethod
     def operation(
-        cls, model: BaseModel, attribute: str, value: any, index: Optional[int] = None
+        cls, model: BaseModel, attribute: str, value: Any, index: int | None = None
     ):
         """Performs the actual operation of the operator."""
         raise NotImplementedError
@@ -224,7 +220,7 @@ class AddOperator(Operator):
     """The implementation for the PATCH "add" operator."""
 
     @classmethod
-    def operation(cls, model: BaseModel, attribute: str, value: any):
+    def operation(cls, model: BaseModel, attribute: str, value: Any):
         alias = get_by_alias(model, attribute)
         if is_multi_valued(model, alias) and isinstance(value, list):
             for v in value:
@@ -262,7 +258,7 @@ class RemoveOperator(Operator):
     REQUIRES_VALUE = False
 
     @classmethod
-    def operation(cls, model: BaseModel, attribute: str, value: any):
+    def operation(cls, model: BaseModel, attribute: str, value: Any):
         alias = get_by_alias(model, attribute)
         existing_value = getattr(model, alias)
         if not existing_value:
@@ -284,7 +280,7 @@ class ReplaceOperator(Operator):
     """The implementation for the PATCH "replace" operator."""
 
     @classmethod
-    def operation(cls, model: BaseModel, attribute: str, value: any):
+    def operation(cls, model: BaseModel, attribute: str, value: Any):
         alias = get_by_alias(model, attribute)
         if is_multi_valued(model, alias) and not isinstance(value, list):
             raise SCIMException(Error.make_invalid_value_error())
@@ -328,13 +324,13 @@ class ResolveResult:
         """
         self.records.append((model, attribute_name, index))
 
-    def _evaluate_result(self, record: Tuple[str, str] | Tuple[str, str, int]):
+    def _evaluate_result(self, record: tuple[str, str] | tuple[str, str, int]):
         if len(record) == 2:
             return getattr(*record)
         else:
             return getattr(record[0], record[1])[record[2]]
 
-    def get_field_annotation(self, annotation_type: Type):
+    def get_field_annotation(self, annotation_type: type):
         if not self.model:
             return None
         return self.model.get_field_annotation(self.attribute, annotation_type)
@@ -353,7 +349,7 @@ class ResolveOperator(Operator):
     REQUIRES_VALUE = False
     RETURNS_VALUE = True
 
-    def __init__(self, path: Optional[str]):
+    def __init__(self, path: str | None):
         super().__init__(path, ResolveResult())
 
     def do_return(self):
@@ -366,7 +362,7 @@ class ResolveOperator(Operator):
         cls,
         model: BaseModel,
         attribute: str,
-        sub_attribute: Optional[str],
+        sub_attribute: str | None,
         value: ResolveResult,
     ):
         alias = get_by_alias(model, attribute)
@@ -381,7 +377,7 @@ class ResolveOperator(Operator):
 
     @classmethod
     def operation(
-        cls, model: BaseModel, attribute: str, value: any, index: Optional[int] = None
+        cls, model: BaseModel, attribute: str, value: Any, index: int | None = None
     ):
         alias = get_by_alias(model, attribute)
         if index is None:
@@ -405,17 +401,17 @@ class ResolveSortOperator(ResolveOperator):
     is not set.
     """
 
-    def __init__(self, path: Optional[str]):
+    def __init__(self, path: str | None):
         super().__init__(path)
 
-    def alias_forbidden(self, model: BaseModel, alias: Optional[str]) -> bool:
+    def alias_forbidden(self, model: BaseModel, alias: str | None) -> bool:
         return (
             not alias
             or model.get_field_annotation(alias, Mutability) == Mutability.write_only
             or model.get_field_annotation(alias, Returned) == Returned.never
         )
 
-    def set_value_case_exact(self, value: any, case_exact: CaseExact):
+    def set_value_case_exact(self, value: Any, case_exact: CaseExact):
         if isinstance(value, str) and case_exact == CaseExact.false:
             value = value.lower()
         self.value = value
@@ -467,7 +463,7 @@ class ResolveSortOperator(ResolveOperator):
                     self.set_value_case_exact(attribute_value, case_exact)
         return self.value
 
-    def select_candidate(self, values: List[any]) -> Tuple[Optional[any], int]:
+    def select_candidate(self, values: list[Any]) -> tuple[Any | None, int]:
         """Selects a viable candidate from a list of possible values."""
         for value in values:
             primary = getattr(value, "primary", False)

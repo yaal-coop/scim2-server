@@ -1,11 +1,7 @@
 import datetime
 import importlib
 import json
-from typing import Dict
-from typing import List
-from typing import Optional
-from typing import Tuple
-from typing import Type
+from typing import Any
 from typing import Union
 from typing import get_args
 from typing import get_origin
@@ -29,7 +25,7 @@ class SCIMException(Exception):
         self.scim_error = scim_error
 
 
-def load_json_resource(json_name: str) -> List:
+def load_json_resource(json_name: str) -> list:
     """Loads a JSON document from the scim2_server package resources."""
     fp = importlib.resources.files("scim2_server") / "resources" / json_name
     with open(fp) as f:
@@ -47,12 +43,12 @@ def load_scim_resource(json_name: str, type_: type[Resource]):
     return ret
 
 
-def load_default_schemas() -> Dict[str, Schema]:
+def load_default_schemas() -> dict[str, Schema]:
     """Loads the default schemas from RFC 7643."""
     return load_scim_resource("default-schemas.json", Schema)
 
 
-def load_default_resource_types() -> Dict[str, ResourceType]:
+def load_default_resource_types() -> dict[str, ResourceType]:
     """Loads the default resource types from RFC 7643."""
     return load_scim_resource("default-resource-types.json", ResourceType)
 
@@ -79,9 +75,7 @@ def merge_resources(target: Resource, updates: BaseModel):
         setattr(target, set_attribute, new_value)
 
 
-def get_by_alias(
-    r: BaseModel, scim_name: str, allow_none: bool = False
-) -> Optional[str]:
+def get_by_alias(r: BaseModel, scim_name: str, allow_none: bool = False) -> str | None:
     """Returns the pydantic attribute name for a BaseModel and given SCIM
     attribute name.
 
@@ -112,10 +106,10 @@ def is_multi_valued(model: BaseModel, attribute_name: str) -> bool:
         attribute_type = get_args(attribute_type)[0]
 
     origin = get_origin(attribute_type)
-    return isinstance(origin, Type) and issubclass(origin, List)
+    return isinstance(origin, type) and issubclass(origin, list)
 
 
-def get_schemas(resource: Resource) -> List[str]:
+def get_schemas(resource: Resource) -> list[str]:
     """Returns a list of all schemas possible for a given resource.
 
     Note that this may include schemas the resource does not currently
@@ -155,7 +149,7 @@ def get_or_create(
     return ret
 
 
-def handle_extension(resource: Resource, scim_name: str) -> Tuple[BaseModel, str]:
+def handle_extension(resource: Resource, scim_name: str) -> tuple[BaseModel, str]:
     default_schema = get_schemas(resource)[0].lower()
     if scim_name.lower().startswith(default_schema):
         scim_name = scim_name[len(default_schema) :].lstrip(":")
@@ -174,7 +168,7 @@ def handle_extension(resource: Resource, scim_name: str) -> Tuple[BaseModel, str
     return resource, scim_name
 
 
-def model_validate_from_dict(field_root_type: BaseModel, value: dict) -> any:
+def model_validate_from_dict(field_root_type: BaseModel, value: dict) -> Any:
     """Workaround for some of the "special" requirements for MS Entra, mixing
     display and displayName in some cases."""
     if (
@@ -187,7 +181,7 @@ def model_validate_from_dict(field_root_type: BaseModel, value: dict) -> any:
     return field_root_type.model_validate(value)
 
 
-def parse_new_value(model: BaseModel, attribute_name: str, value: any) -> any:
+def parse_new_value(model: BaseModel, attribute_name: str, value: Any) -> Any:
     """Given a model and attribute name, attempt to parse a new value so that
     the type matches the type expected by the model.
 
