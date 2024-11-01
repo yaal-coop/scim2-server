@@ -1,6 +1,7 @@
 import datetime
 import importlib
 import json
+from types import UnionType
 from typing import Any
 from typing import Union
 from typing import get_args
@@ -102,7 +103,7 @@ def is_multi_valued(model: BaseModel, attribute_name: str) -> bool:
     """Checks whether a given attribute of a model is multi-valued."""
     attribute_type = model.model_fields[attribute_name].annotation
 
-    if get_origin(attribute_type) is Union:
+    if get_origin(attribute_type) in (Union, UnionType):
         attribute_type = get_args(attribute_type)[0]
 
     origin = get_origin(attribute_type)
