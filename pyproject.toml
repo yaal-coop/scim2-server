@@ -28,9 +28,9 @@ classifiers = [
 
 requires-python = ">= 3.11"
 dependencies = [
+    "scim2-filter-parser>=0.7.0",
     "scim2-models>=0.2.3",
     "werkzeug>=3.0.3",
-    "scim2-filter-parser>=0.7.0",
 ]
 
 [project.urls]
@@ -42,9 +42,10 @@ scim2-server = "scim2_server.cli:main"
 
 [dependency-groups]
 dev = [
+    "httpx>=0.27.0",
     "pytest>=8.2.2",
     "pytest-coverage>=0.0",
-    "httpx>=0.27.0",
+    "pre-commit-uv>=4.1.4",
     "time-machine>=2.14.2",
     "tox-uv>=1.16.0",
 ]
@@ -113,12 +114,12 @@ env_list = [
 
 [tool.tox.env_run_base]
 runner = "uv-venv-lock-runner"
+dependency_groups = ["dev"]
 commands = [
     ["pytest", "--showlocals", "--full-trace", "{posargs}"],
 ]
 
 [tool.tox.env.style]
-deps = ["pre-commit-uv"]
 runner = "uv-venv-runner"
 commands = [
     ["pre-commit", "run", "--all-files", "--show-diff-on-failure"],
@@ -126,9 +127,6 @@ commands = [
 
 [tool.tox.env.minversions]
 uv_resolution = "lowest-direct"
-commands = [
-    ["pytest", "--showlocals", "--full-trace", "{posargs}"],
-]
 
 [tool.tox.env.coverage]
 commands = [
