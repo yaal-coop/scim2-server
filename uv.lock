@@ -534,14 +534,14 @@ wheels = [
 
 [[package]]
 name = "scim2-models"
-version = "0.2.3"
+version = "0.2.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pydantic", extra = ["email"] },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/50/32/2024baa5d4d49985eeafaee8eb0c8c1358ec222ab094d4e86ace71427de9/scim2_models-0.2.3.tar.gz", hash = "sha256:27a5093ab9ee0ceefc66c735cdab10ca16e826da72c24876a003b174d9558fe3", size = 121891 }
+sdist = { url = "https://files.pythonhosted.org/packages/0c/3d/66acc8dff5c90ce14edfa6c70ecc32206bd2266ce1874b2e51e0488eb525/scim2_models-0.2.4.tar.gz", hash = "sha256:add396ff8b3675a1dcd4252fda5b19889125768ce18ff908004574af4bcc5ce1", size = 123176 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/7b/2c/4a5ecc437110f90d0bf4a0f5190ce28fc65df142645878f44005568a4246/scim2_models-0.2.3-py3-none-any.whl", hash = "sha256:ac07107258a11105b9c1185ec2f5b4c8bd89552b8ad157aaca1a8d9c9046bf20", size = 38551 },
+    { url = "https://files.pythonhosted.org/packages/93/c9/665340087a7ee5623e331043bc7f9c3485ebc5a8e525d8d446875e871e98/scim2_models-0.2.4-py3-none-any.whl", hash = "sha256:1b8639983297bbed6ad6d04841a8e2c71278aed8a0fff064276b4c1f0d823818", size = 38742 },
 ]
 
 [[package]]
@@ -567,7 +567,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "scim2-filter-parser", specifier = ">=0.7.0" },
-    { name = "scim2-models", specifier = ">=0.2.3" },
+    { name = "scim2-models", specifier = ">=0.2.4" },
     { name = "werkzeug", specifier = ">=3.0.3" },
 ]
 

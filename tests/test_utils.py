@@ -15,7 +15,6 @@ from scim2_server.filter import evaluate_filter
 from scim2_server.operators import ResolveOperator
 from scim2_server.utils import SCIMException
 from scim2_server.utils import get_or_create
-from scim2_server.utils import is_multi_valued
 from scim2_server.utils import merge_resources
 
 
@@ -365,17 +364,6 @@ class TestUtils:
         merge_resources(stored, Foo(immutable_string="ABC"))
         with pytest.raises(SCIMException, match="mutability"):
             merge_resources(stored, Foo(immutable_string="D"))
-
-    def test_is_multi_valued(self):
-        class Foo(Resource):
-            schemas: list[str] = ["urn:example:2.0:Foo"]
-            some_string: str | None = None
-            multi_valued_string: list[str] | None = None
-
-        res = Foo()
-        assert is_multi_valued(res, "schemas")
-        assert not is_multi_valued(res, "some_string")
-        assert is_multi_valued(res, "multi_valued_string")
 
     def test_get_or_create_mutability(self):
         u = User()

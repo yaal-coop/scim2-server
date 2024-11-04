@@ -17,7 +17,6 @@ from scim2_server.utils import SCIMException
 from scim2_server.utils import get_by_alias
 from scim2_server.utils import get_or_create
 from scim2_server.utils import handle_extension
-from scim2_server.utils import is_multi_valued
 from scim2_server.utils import parse_new_value
 
 ATTRIBUTE_PATH_REGEX = re.compile(
@@ -221,7 +220,7 @@ class AddOperator(Operator):
     @classmethod
     def operation(cls, model: BaseModel, attribute: str, value: Any):
         alias = get_by_alias(model, attribute)
-        if is_multi_valued(model, alias) and isinstance(value, list):
+        if model.get_field_multiplicity(alias) and isinstance(value, list):
             for v in value:
                 cls.operation(model, attribute, v)
             return
@@ -234,7 +233,7 @@ class AddOperator(Operator):
         if model.get_field_annotation(alias, Mutability) == Mutability.read_only:
             raise SCIMException(Error.make_mutability_error())
 
-        if is_multi_valued(model, alias):
+        if model.get_field_multiplicity(alias):
             if getattr(model, alias) is None:
                 setattr(model, alias, [])
             if getattr(new_value, "primary", False):
@@ -281,7 +280,7 @@ class ReplaceOperator(Operator):
     @classmethod
     def operation(cls, model: BaseModel, attribute: str, value: Any):
         alias = get_by_alias(model, attribute)
-        if is_multi_valued(model, alias) and not isinstance(value, list):
+        if model.get_field_multiplicity(alias) and not isinstance(value, list):
             raise SCIMException(Error.make_invalid_value_error())
 
         existing_value = getattr(model, alias)

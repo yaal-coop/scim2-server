@@ -1,11 +1,7 @@
 import datetime
 import importlib
 import json
-from types import UnionType
 from typing import Any
-from typing import Union
-from typing import get_args
-from typing import get_origin
 
 from pydantic import EmailStr
 from pydantic import ValidationError
@@ -95,17 +91,6 @@ def get_by_alias(r: BaseModel, scim_name: str, allow_none: bool = False) -> str 
         raise SCIMException(Error.make_no_target_error()) from e
 
 
-def is_multi_valued(model: BaseModel, attribute_name: str) -> bool:
-    """Check whether a given attribute of a model is multi-valued."""
-    attribute_type = model.model_fields[attribute_name].annotation
-
-    if get_origin(attribute_type) in (Union, UnionType):
-        attribute_type = get_args(attribute_type)[0]
-
-    origin = get_origin(attribute_type)
-    return isinstance(origin, type) and issubclass(origin, list)
-
-
 def get_schemas(resource: Resource) -> list[str]:
     """Return a list of all schemas possible for a given resource.
 
@@ -136,7 +121,7 @@ def get_or_create(
             raise SCIMException(Error.make_mutability_error())
     ret = getattr(model, attribute_name, None)
     if not ret:
-        if is_multi_valued(model, attribute_name):
+        if model.get_field_multiplicity(attribute_name):
             ret = []
             setattr(model, attribute_name, ret)
         else:
