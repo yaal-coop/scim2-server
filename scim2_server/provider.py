@@ -311,7 +311,7 @@ class SCIMProvider:
             for s in results
         ]
 
-        return ListResponse[Union[*self.backend.get_models()]](
+        return ListResponse[Union[tuple(self.backend.get_models())]](  # noqa: UP007
             total_results=total_results,
             items_per_page=search_request.count,
             start_index=search_request.start_index,

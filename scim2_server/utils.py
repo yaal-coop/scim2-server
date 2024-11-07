@@ -1,6 +1,8 @@
 import datetime
 import importlib
 import json
+import re
+import sys
 from typing import Any
 
 from pydantic import EmailStr
@@ -178,7 +180,13 @@ def parse_new_value(model: BaseModel, attribute_name: str, value: Any) -> Any:
             if field_root_type is bool and isinstance(value, str):
                 new_value = not value.lower() == "false"
             elif field_root_type is datetime.datetime and isinstance(value, str):
-                new_value = datetime.datetime.fromisoformat(value)
+                # ISO 8601 datetime format (notably with the Z suffix) are only supported from Python 3.11
+                if sys.version_info < (3, 11):  # pragma: no cover
+                    new_value = datetime.datetime.fromisoformat(
+                        re.sub(r"Z$", "+00:00", value)
+                    )
+                else:
+                    new_value = datetime.datetime.fromisoformat(value)
             elif field_root_type is EmailStr and isinstance(value, str):
                 new_value = value
             elif hasattr(field_root_type, "model_fields"):
