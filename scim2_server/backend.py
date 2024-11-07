@@ -82,7 +82,7 @@ class Backend:
         self.models_dict[resource_type.id] = Resource.from_schema(base_schema)
         if extensions:
             self.models_dict[resource_type.id] = self.models_dict[resource_type.id][
-                Union[*extensions]
+                Union[tuple(extensions)]  # noqa: UP007
             ]
 
     def get_resource_types(self):
@@ -332,7 +332,7 @@ class InMemoryBackend(Backend):
     ) -> Resource | None:
         resource = resource.model_copy(deep=True)
         resource.id = uuid.uuid4().hex
-        utcnow = datetime.datetime.now(datetime.UTC)
+        utcnow = datetime.datetime.now(datetime.timezone.utc)
         resource.meta = Meta(
             resource_type=self.resource_types[resource_type_id].name,
             created=utcnow,
@@ -374,7 +374,9 @@ class InMemoryBackend(Backend):
             updated_resource = self.models_dict[resource_type_id].model_validate(
                 resource.model_dump()
             )
-            self._touch_resource(updated_resource, datetime.datetime.now(datetime.UTC))
+            self._touch_resource(
+                updated_resource, datetime.datetime.now(datetime.timezone.utc)
+            )
 
             for unique_attribute in self.unique_attributes[resource_type_id]:
                 new_value = unique_attribute.get_attribute(updated_resource)
