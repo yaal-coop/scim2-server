@@ -129,6 +129,7 @@ commands = [
 ]
 
 [tool.tox.env.minversions]
+runner = "uv-venv-runner"
 uv_resolution = "lowest-direct"
 
 [tool.tox.env.coverage]
